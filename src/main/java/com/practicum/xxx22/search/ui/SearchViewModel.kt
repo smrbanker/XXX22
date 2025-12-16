@@ -1,0 +1,87 @@
+package com.practicum.xxx22.search.ui
+
+import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.practicum.xxx22.search.domain.Track
+import com.practicum.xxx22.search.domain.api.TracksInteractor
+import com.practicum.xxx22.utils.debounce
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+class SearchViewModel(private val tracksInteractor : TracksInteractor): ViewModel() {
+
+    private val stateLiveData = MutableLiveData<SearchState>()
+    fun observeState(): LiveData<SearchState> = stateLiveData
+    private val showToast = SingleLiveEvent<String?>()
+    fun observeShowToast(): LiveData<String?> = showToast
+    private var textInput = ""
+
+    private val trackSearchDebounce = debounce<TextView>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) {
+            inputEditText -> iAPICall(inputEditText)
+    }
+    fun searchDebounce(inputEditText : TextView) {
+        if (textInput != inputEditText.toString()) {
+            this.textInput = inputEditText.toString()
+            trackSearchDebounce(inputEditText)
+        }
+    }
+
+    fun iAPICall (inputEditText : TextView) {
+        if (inputEditText.text.isNotEmpty()) {
+            renderState(SearchState.Loading)
+            searchTracks(inputEditText)
+        }
+    }
+
+    private fun searchTracks(inputEditText : TextView) {
+        viewModelScope.launch {
+            tracksInteractor
+                .searchTracks(inputEditText.text.toString(), "song")
+                .collect { pair -> processResult(pair.first, pair.second) }
+        }
+    }
+
+    private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
+        val tracks = mutableListOf<Track>()
+        if (foundTracks != null) {
+            tracks.addAll(foundTracks)
+        }
+
+        when {
+            errorMessage != null -> {
+                renderState(SearchState.Error(errorMessage))
+            }
+            tracks.isEmpty() -> {
+                renderState(SearchState.Empty)
+            }
+            else -> {
+                renderState(SearchState.Content(tracks))
+            }
+        }
+    }
+
+    private fun renderState(state: SearchState) {
+        stateLiveData.postValue(state)
+    }
+
+    private var isClickAllowed = true
+    fun clickDebounce(): Boolean {      //задержка для двойного нажатия
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+}

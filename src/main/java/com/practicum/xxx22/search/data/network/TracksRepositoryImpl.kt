@@ -1,0 +1,43 @@
+package com.practicum.xxx22.search.data.network
+
+import com.practicum.xxx22.media.data.AppDatabase
+import com.practicum.xxx22.search.data.NetworkClient
+import com.practicum.xxx22.search.data.dto.TracksSearchRequest
+import com.practicum.xxx22.search.data.dto.iTinesResponse
+import com.practicum.xxx22.search.domain.api.TracksRepository
+import com.practicum.xxx22.search.domain.Track
+import com.practicum.xxx22.search.domain.api.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
+class TracksRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val appDatabase: AppDatabase
+) : TracksRepository {
+
+    override fun searchTracks(text: String, text2: String): Flow<Resource<List<Track>>> = flow {
+        val response = networkClient.doRequest(TracksSearchRequest(text, text2))
+        if (response.resultCode == 200) {
+            val trackList = (response as iTinesResponse).results.map {
+                Track(it.trackId,
+                    it.trackName,
+                    it.artistName,
+                    it.trackTime,
+                    it.artworkUrl100,
+                    it.collectionName,
+                    it.releaseDate,
+                    it.primaryGenreName,
+                    it.country,
+                    it.previewUrl,
+                    "00:00",
+                    isLiked(it.trackId)) }
+            emit(Resource.Success(trackList))
+        } else {
+            emit(Resource.Error(response.resultCode.toString()))
+        }
+    }
+
+    private suspend fun isLiked(id : Int) : Boolean {
+        return id in appDatabase.trackDao().getTracksId()
+    }
+}

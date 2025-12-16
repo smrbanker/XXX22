@@ -1,0 +1,48 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/set_back"
+    android:orientation="vertical"
+    android:id="@+id/media_fragment"
+    tools:context="com.practicum.playlistmaker.media.ui.MediaFragment">
+
+    <LinearLayout
+        android:id="@+id/media"
+        style="@style/SettingsScreenFrame">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp"
+            android:fontFamily="@font/ys_display_regular"
+            android:paddingLeft="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="10dp"
+            android:text="@string/app_media"
+            android:textColor="@color/set_font"
+            android:textFontWeight="500"
+            android:textSize="22sp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="14sp"
+        app:tabTextAppearance="@style/CustomTextAppearanceTab"
+        app:tabTextColor="@color/set_font"
+        app:tabIndicatorColor="@color/set_font"
+        app:tabBackground="@color/set_back"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
