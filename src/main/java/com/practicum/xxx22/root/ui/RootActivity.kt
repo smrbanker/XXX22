@@ -8,7 +8,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityRootBinding
 
-class RootActivity : AppCompatActivity() {
+class RootActivity : AppCompatActivity() { //Root
 
     private lateinit var binding: ActivityRootBinding
 
