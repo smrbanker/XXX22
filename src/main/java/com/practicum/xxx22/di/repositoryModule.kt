@@ -3,6 +3,8 @@ package com.practicum.xxx22.di
 import android.content.Context
 import android.media.MediaPlayer
 import com.practicum.xxx22.media.data.FavouriteRepositoryImpl
+import com.practicum.xxx22.media.data.PlaylistsRepositoryImpl
+import com.practicum.xxx22.media.data.db.PlaylistsRepository
 import com.practicum.xxx22.media.domain.db.FavouriteRepository
 import com.practicum.xxx22.player.data.MediaPlayerRepositories
 import com.practicum.xxx22.player.data.MediaPlayerRepositoriesImpl
@@ -21,7 +23,9 @@ import com.practicum.xxx22.sharing.data.repository.ExternalNavigatorRepository
 import com.practicum.xxx22.sharing.data.repository.ExternalNavigatorRepositoryImpl
 import com.practicum.xxx22.sharing.data.repository.SharingRepository
 import com.practicum.xxx22.sharing.data.repository.SharingRepositoryImpl
+import com.practicum.xxx22.utils.PlaylistDbConvertor
 import com.practicum.xxx22.utils.TrackDbConvertor
+import com.practicum.xxx22.utils.TrackListDbConvertor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -72,7 +76,15 @@ val repositoryModule = module {
 
     factory { TrackDbConvertor() }
 
+    factory { PlaylistDbConvertor() }
+
+    factory { TrackListDbConvertor() }
+
     single<FavouriteRepository> {
         FavouriteRepositoryImpl(get(), get())
+    }
+
+    single<PlaylistsRepository> {
+        PlaylistsRepositoryImpl(get(), get(), get(), get())
     }
 }

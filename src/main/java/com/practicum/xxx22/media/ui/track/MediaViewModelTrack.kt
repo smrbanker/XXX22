@@ -1,4 +1,4 @@
-package com.practicum.xxx22.media.ui
+package com.practicum.xxx22.media.ui.track
 
 import android.content.Context
 import androidx.lifecycle.LiveData

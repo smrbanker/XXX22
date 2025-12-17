@@ -1,4 +1,4 @@
-package com.practicum.xxx22.media.ui
+package com.practicum.xxx22.media.ui.track
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +18,6 @@ import com.practicum.xxx22.search.domain.Track
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import kotlin.getValue
 
 class MediaTrackFragment : Fragment() {
 
@@ -28,7 +27,7 @@ class MediaTrackFragment : Fragment() {
 
     private var _binding: FragmentMediaTrackBinding? = null
     private val binding get() = _binding!!
-    private var adapter: MediaAdapter? = null
+    private var adapter: MediaAdapterTrack? = null
     private lateinit var imageView: ImageView
     private lateinit var textView: TextView
     private lateinit var favouriteList: RecyclerView
@@ -41,7 +40,7 @@ class MediaTrackFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = MediaAdapter(trackList, onTrackClick = { trackID ->
+        adapter = MediaAdapterTrack(trackList, onTrackClick = { trackID ->
             callPlayerActivity(trackID)
         })
 
@@ -96,7 +95,7 @@ class MediaTrackFragment : Fragment() {
         val trackJson: String = gson.toJson(trackID)
         findNavController().navigate(
             R.id.action_mediaFragment_to_playerFragment,
-            PlayerFragment.createArgs(trackJson))
+            PlayerFragment.Companion.createArgs(trackJson))
     }
 
     companion object {
