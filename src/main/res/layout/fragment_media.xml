@@ -6,7 +6,7 @@
     android:background="@color/set_back"
     android:orientation="vertical"
     android:id="@+id/media_fragment"
-    tools:context="com.practicum.playlistmaker.media.ui.MediaFragment">
+    tools:context="com.practicum.xxx22.media.ui.MediaFragment">
 
     <LinearLayout
         android:id="@+id/media"

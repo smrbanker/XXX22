@@ -27,7 +27,7 @@ val dataModule = module {
 
     single {
         androidContext()
-            .getSharedPreferences("save_list", Context.MODE_PRIVATE)
+            .getSharedPreferences("save_list2", Context.MODE_PRIVATE)
     }
 
     factory { Gson() }
@@ -37,7 +37,7 @@ val dataModule = module {
     }
 
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database100.db")
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database102.db")
             .build()
     }
 }
